@@ -48,8 +48,14 @@ class GenerationHistory(Base):
     prompt = Column(Text, nullable=False)
     result_url = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
-
+# Create tables
 Base.metadata.create_all(bind=engine)
+
+# Pre-warm the app 
+print("🚀 TikTok Vibe App starting up...")
+print(f"📊 Venice API configured: {'✅' if VENICE_API_KEY else '❌'}")
+print(f"🔐 JWT Secret configured: {'✅' if SECRET_KEY else '❌'}")
+print("✅ App ready for requests!")
 
 # Security
 security = HTTPBearer()
@@ -275,7 +281,12 @@ def get_history(current_user: User = Depends(get_current_user), db: Session = De
     ]
 
 # Serve static files and React app
-app.mount("/static", StaticFiles(directory="static"), name="static")
+@app.get("/health")
+def health_check():
+    """Simple health check endpoint"""
+    return {"status": "healthy", "timestamp": datetime.utcnow().isoformat()}
+
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 @app.get("/{full_path:path}")
 def serve_react_app(full_path: str):
