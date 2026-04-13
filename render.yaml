@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: tiktok-vibe-app
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    envVars:
+      - key: VENICE_API_KEY
+        value: VENICE_INFERENCE_KEY_IPKxzZhAO1g8PR_x8W6nUaCVMhpwJqi_JR3vQpVwIj
+      - key: SECRET_KEY
+        generateValue: true
+    healthCheckPath: /api/me
