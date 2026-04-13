@@ -12,8 +12,8 @@ COPY . .
 # Create directories
 RUN mkdir -p static/audio
 
-# Expose port
+# Expose port (Railway will override with $PORT env var)
 EXPOSE 8000
 
-# Run app
+# Run app - Railway overrides this with startCommand
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
