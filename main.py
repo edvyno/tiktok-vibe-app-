@@ -87,7 +87,16 @@ def generate_image(request: ImageGenerateRequest):
         
         if response.status_code == 200:
             result = response.json()
-            if result.get("data") and len(result["data"]) > 0:
+            # Handle new Venice API format - images array contains base64 strings directly
+            if result.get("images") and len(result["images"]) > 0:
+                return {
+                    "success": True,
+                    "image_b64": result["images"][0],
+                    "prompt_used": akari_prompt,
+                    "timestamp": datetime.utcnow().isoformat()
+                }
+            # Fallback to old format for backwards compatibility
+            elif result.get("data") and len(result["data"]) > 0:
                 return {
                     "success": True,
                     "image_b64": result["data"][0]["b64_json"],
